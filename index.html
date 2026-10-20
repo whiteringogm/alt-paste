@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f2ef"><meta name="description" content="貼るたびに発言者を交互に付ける、チャットログ整理ツール。">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Alt Paste — 交互に貼るログ</title>
+<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="stylesheet" href="./styles.css"><script type="module" src="./app.js"></script>
+</head>
+<body>
+<main>
+<header><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 7h18l-4-4m4 4-4 4M27 25H9l4-4m-4 4 4 4"/></svg><div><h1>Alt Paste</h1><p>貼る。交互になる。まとめる。</p></div></div><button id="settingsButton" class="quiet" aria-label="設定を開く">設定</button></header>
+<section class="composer" aria-label="発言を追加">
+<div class="next-row"><div><span class="eyebrow" id="turnLabel">最初の発言者</span><strong id="nextName">ユーザー</strong></div><div class="segmented" aria-label="最初の発言者"><button id="startUser" aria-pressed="true">ユーザー</button><button id="startAI" aria-pressed="false">AI</button></div><button id="switchNext" class="quiet" hidden>次の側を切替</button></div>
+<button id="pasteButton" class="primary paste-button"><span aria-hidden="true">＋</span> コピーした発言を貼る</button>
+<label class="paste-label" for="pasteInput">または、この欄に直接貼り付け</label>
+<textarea id="pasteInput" rows="2" placeholder="長押し → ペースト ／ Ctrl・⌘ + V" spellcheck="false" aria-describedby="pasteHelp"></textarea>
+<div class="input-footer"><span id="pasteHelp">貼り付けると自動で1発言追加</span><button id="addDraft" class="quiet" hidden>入力分を追加</button></div>
+<div id="status" class="status" role="status" aria-live="polite">先行側を選んで、1発言ずつ貼っていこう。</div>
+</section>
+<section class="log-section" aria-label="貼り付けたログ">
+<div class="section-heading"><h2>ログ <span id="count">0</span></h2><div><button id="undoButton" class="quiet" disabled>取り消し</button><button id="clearButton" class="quiet" disabled>全消去</button></div></div>
+<div id="log" class="log" tabindex="0"><div class="empty"><span aria-hidden="true">↔</span><p>会話を、ひとつずつ。</p><small>発言者は貼るたびに自動で切り替わる。</small></div></div>
+<div class="copy-row"><span id="characters">0 文字</span><button id="copyButton" class="primary" disabled>まとめてコピー</button></div>
+</section>
+<footer><span id="saveStatus">この端末に自動保存</span><span>v1.0.0</span></footer>
+</main>
+<dialog id="settingsDialog"><form id="settingsForm"><h2>設定</h2><p class="muted">発言者名は、追加済みのログにも反映。</p><label>ユーザー側の名前<input id="userName" maxlength="80" autocomplete="off" placeholder="ユーザー"></label><label>AI側の名前<input id="aiName" maxlength="80" autocomplete="off" placeholder="AI"></label><label>コピー時の見出し<select id="format"><option value="brackets">【発言者名】</option><option value="colon">発言者名：</option></select></label><p class="hint">iPhoneではSafariの共有メニューから「ホーム画面に追加」でアプリとして使える。ログはこのブラウザ内だけに保存される。</p><div class="dialog-actions"><button type="button" data-close="settingsDialog">閉じる</button><button type="submit" class="primary">保存</button></div></form></dialog>
+<dialog id="editDialog"><form id="editForm"><h2>発言を編集</h2><label>発言者<select id="editRole"><option value="0">ユーザー</option><option value="1">AI</option></select></label><label>本文<textarea id="editText" rows="8" required></textarea></label><p class="hint">この発言だけを変更。ほかの発言者はそのまま。</p><div class="dialog-actions"><button type="button" id="deleteEntry" class="danger">削除</button><button type="button" data-close="editDialog">戻る</button><button class="primary" type="submit">保存</button></div></form></dialog>
+<dialog id="clearDialog"><h2>ログを全消去する？</h2><p>名前の設定は残る。消去直後は「取り消し」で戻せる。</p><div class="dialog-actions"><button data-close="clearDialog">戻る</button><button id="confirmClear" class="primary">全消去する</button></div></dialog>
+<dialog id="copyDialog"><h2>ログをコピー</h2><p>自動コピーが使えないため、下の本文を選択してコピーしてね。</p><textarea id="copyText" readonly rows="10" aria-label="コピー用ログ"></textarea><div class="dialog-actions"><button id="selectCopy">全選択</button><button data-close="copyDialog">閉じる</button></div></dialog>
+</body></html>
